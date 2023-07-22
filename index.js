@@ -10,7 +10,7 @@ app.use(express.json());
 
 
 //mongoDB
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.gq6gqcm.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -57,9 +57,20 @@ async function run() {
 
       //classrelatedApi
       app.get("/colleges", async (req, res) => {
-        const result = await usersCollection.find().toArray();
+        const result = await CollegesCollection.find().toArray();
         return res.send(result);
       });
+
+      app.get('/colleges/:id', async(req,res)=>{
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id)}
+        
+      const options = {
+        projection: { college_name: 1,  image_url : 1, admission_process:1,events : 1, research_works:1,sports_categories:1,},
+      };
+        const result = await CollegesCollection.findOne(query,options);
+        res.send(result);
+     })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
