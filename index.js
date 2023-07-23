@@ -33,6 +33,9 @@ async function run() {
     const CollegesCollection = client
     .db("BookYourcollege")
     .collection("Colleges");
+    const ReviewCollection = client
+    .db("BookYourcollege")
+    .collection("Review");
 
 
     //  users realated api is here
@@ -55,7 +58,28 @@ async function run() {
         return res.send(result);
       });
 
-      //classrelatedApi
+      // Assuming you already have the necessary imports and database setup
+app.patch("/users/:id", async (req, res) => {
+  const userId = req.params.id;
+  const { name, email, university, address } = req.body;
+
+  try {
+    // Assuming you have a usersCollection that allows you to update user data
+    // Replace this with the actual method to update the user in your database
+    await usersCollection.updateMany(
+      { _id: new ObjectId(userId) }, // Assuming you are using MongoDB ObjectId
+      { $set: { name, email, university, address } }
+    );
+
+    return res.status(200).json({ message: "User data updated successfully!" });
+  } catch (error) {
+    console.error("Error updating user data:", error);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+      //colege relatedApi
       app.get("/colleges", async (req, res) => {
         const result = await CollegesCollection.find().toArray();
         return res.send(result);
@@ -71,6 +95,12 @@ async function run() {
         const result = await CollegesCollection.findOne(query,options);
         res.send(result);
      })
+
+     //review related 
+     app.get("/reviews", async (req, res) => {
+      const result = await ReviewCollection.find().toArray();
+      return res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
