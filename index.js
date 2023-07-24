@@ -36,6 +36,9 @@ async function run() {
     const ReviewCollection = client
     .db("BookYourcollege")
     .collection("Review");
+    const admissionCollection = client
+    .db("BookYourcollege")
+    .collection("Admission");
 
 
     //  users realated api is here
@@ -95,6 +98,23 @@ app.patch("/users/:id", async (req, res) => {
         const result = await CollegesCollection.findOne(query,options);
         res.send(result);
      })
+
+     //admission Related
+     app.get("/admission", async (req, res) => {
+      const result = await admissionCollection.find().toArray();
+      return res.send(result);
+    });
+
+    app.post("/admission",  async (req, res) => {
+      const formData = req.body;
+      
+
+     
+      const result = await admissionCollection.insertOne(formData );
+      return res.send(result);
+    });
+    
+    
 
      //review related 
      app.get("/reviews", async (req, res) => {
