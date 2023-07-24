@@ -117,7 +117,7 @@ app.patch("/users/:id", async (req, res) => {
     
 
      //review related 
-     app.get("/reviews", async (req, res) => {
+     app.get("/clgreviews", async (req, res) => {
       const result = await ReviewCollection.find().toArray();
       return res.send(result);
     });
